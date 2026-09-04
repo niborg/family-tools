@@ -1,34 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tools
 
-## Getting Started
+Shared dashboard at [tools.knipe.io](https://tools.knipe.io). Next.js, gated by a single password, hosted on Cloudflare Workers. No database.
 
-First, run the development server:
+Anyone with the password can get in. That is intentional.
+
+## Local development
+
+Copy `.env.example` to `.env.local` and set both values:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- `SITE_PASSWORD` — what people type on `/login`
+- `AUTH_SECRET` — a long random string used only to sign the cookie (`openssl rand -base64 32`)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Then:
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000). You should land on the password page, then the empty dashboard after a successful login. The session cookie lasts 30 days.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To preview the Workers runtime locally (closer to production):
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+cp .env.example .dev.vars
+# add NEXTJS_ENV=development to .dev.vars
+npm run preview
+```
 
-## Deploy on Vercel
+## Deploy to Cloudflare
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+You need to be logged into the Cloudflare account that owns `knipe.io`:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npx wrangler login
+```
+
+Set production secrets (once):
+
+```bash
+npx wrangler secret put SITE_PASSWORD
+npx wrangler secret put AUTH_SECRET
+```
+
+Deploy:
+
+```bash
+npm run deploy
+```
+
+That builds with OpenNext, uploads the Worker, and attaches **tools.knipe.io** as a custom domain (proxied on Cloudflare). No Route 53, no ACM cert, no AWS.
+
+## Cost
+
+Weekly family use stays inside the Cloudflare Workers free tier (100,000 requests/day). Idle cost is $0. No Lambda cold start.
