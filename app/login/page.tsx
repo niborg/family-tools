@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { isAuthenticated } from "@/lib/auth";
 import { RanchFrame } from "@/app/ranch-frame";
+import { SuzeBob } from "@/app/suze-bob";
 import { LoginForm } from "./login-form";
 
 export const dynamic = "force-dynamic";
@@ -19,9 +20,7 @@ export default async function LoginPage() {
           knipe.io homestead
         </p>
         <h1 className="ranch-title mt-2 text-center text-4xl">
-          <span className="bounce-slow" aria-hidden>
-            🤠
-          </span>
+          <SuzeBob size="lg" />
           <br />
           Ranch Gate
         </h1>

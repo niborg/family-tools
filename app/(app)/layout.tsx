@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { logout } from "@/app/actions/auth";
 import { isAuthenticated } from "@/lib/auth";
 import { RanchFrame } from "@/app/ranch-frame";
+import { SuzeBob } from "@/app/suze-bob";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -19,7 +20,7 @@ export default async function AppLayout({
 
   return (
     <RanchFrame>
-      <header className="ranch-sign relative mb-8 overflow-hidden px-5 py-4">
+      <header className="ranch-sign relative mb-8 px-5 py-4">
         <span className="sparkle top-2 left-3">✨</span>
         <span className="sparkle bottom-2 left-16">⭐</span>
         <div className="flex items-start justify-between gap-4">
@@ -28,10 +29,11 @@ export default async function AppLayout({
               knipe.io homestead
             </p>
             <h1 className="ranch-title mt-1 text-3xl sm:text-4xl">
-              <Link className="text-[#3d1f0a] no-underline hover:text-[#c44512]" href="/">
-                <span className="bounce-slow mr-2" aria-hidden>
-                  🤠
-                </span>
+              <Link
+                className="inline-flex items-center text-[#3d1f0a] no-underline hover:text-[#c44512]"
+                href="/"
+              >
+                <SuzeBob />
                 The Tool Shed
               </Link>
             </h1>
