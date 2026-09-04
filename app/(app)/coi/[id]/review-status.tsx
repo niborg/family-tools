@@ -42,8 +42,8 @@ export function ReviewStatus({ initial }: { initial: CoiReviewPublic }) {
   }, [review.id, waiting]);
 
   return (
-    <section className="rounded-2xl border border-(--line) bg-(--card) px-6 py-8">
-      <p className="text-sm text-(--muted)">{review.filename}</p>
+    <section className="ranch-panel px-6 py-8">
+      <p className="font-pixel text-lg text-(--muted)">{review.filename}</p>
       {waiting ? (
         <div className="mt-4 flex items-center gap-3">
           <span
@@ -51,43 +51,39 @@ export function ReviewStatus({ initial }: { initial: CoiReviewPublic }) {
             className="inline-block size-5 animate-spin rounded-full border-2 border-(--line) border-t-(--accent)"
           />
           <div>
-            <h2 className="text-xl font-semibold tracking-tight">
+            <h2 className="ranch-title text-2xl">
               Reviewing your certificate…
             </h2>
-            <p className="mt-1 text-sm text-(--muted)">
-              This usually takes a minute. You can leave this page open.
+            <p className="mt-1 font-comic text-sm font-bold text-(--muted)">
+              This usually takes a minute. Leave this page open and watch the
+              tumbleweeds.
             </p>
           </div>
         </div>
       ) : null}
       {review.status === "done" ? (
         <>
-          <h2 className="mt-2 text-xl font-semibold tracking-tight">Review</h2>
-          <div className="mt-4 whitespace-pre-wrap text-[15px] leading-7">
+          <h2 className="ranch-title mt-2 text-2xl">Review</h2>
+          <div className="mt-4 whitespace-pre-wrap font-comic text-[15px] leading-7">
             {review.result}
           </div>
         </>
       ) : null}
       {review.status === "error" ? (
         <>
-          <h2 className="mt-2 text-xl font-semibold tracking-tight">
-            The review did not finish
-          </h2>
-          <p className="mt-3 text-(--danger)" role="alert">
+          <h2 className="ranch-title mt-2 text-2xl">The review did not finish</h2>
+          <p className="mt-3 font-comic font-bold text-(--danger)" role="alert">
             {review.error}
           </p>
           <p className="mt-6">
-            <Link
-              className="rounded-lg bg-(--accent) px-4 py-2.5 text-sm font-semibold text-white hover:bg-(--accent-hover)"
-              href="/coi"
-            >
+            <Link className="ranch-btn inline-block px-4 py-2.5 no-underline" href="/coi">
               Try again
             </Link>
           </p>
         </>
       ) : null}
       {pollError ? (
-        <p className="mt-4 text-sm text-(--danger)" role="alert">
+        <p className="mt-4 font-comic text-sm font-bold text-(--danger)" role="alert">
           {pollError}
         </p>
       ) : null}

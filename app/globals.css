@@ -1,24 +1,536 @@
 @import "tailwindcss";
 
+@theme {
+  --font-ranch: var(--font-ranchers), "Rye", fantasy, serif;
+  --font-comic: var(--font-comic-neue), "Comic Sans MS", "Comic Sans", cursive;
+  --font-pixel: var(--font-vt323), "VT323", ui-monospace, monospace;
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-danger: var(--danger);
+}
+
 :root {
-  --paper: #f3eee4;
-  --ink: #1f1a14;
-  --muted: #6b6258;
-  --card: #fffcf7;
-  --line: #ddd4c6;
-  --accent: #2f4a38;
-  --accent-hover: #24392b;
-  --danger: #8a3b2b;
+  --paper: #1a0a2e;
+  --ink: #2b1408;
+  --muted: #6b3f24;
+  --card: #fcefdc;
+  --line: #8b5a2b;
+  --accent: #c44512;
+  --accent-hover: #9a320c;
+  --danger: #d90429;
+  --sky-top: #12061f;
+  --sky-mid: #c44536;
+  --sky-low: #f4a261;
+  --dust: #e9c46a;
+  --gold: #ffd700;
+  --hot: #ff00aa;
+  --denim: #1d4e89;
+  --cactus: #2d6a4f;
+  --wood: #8b5a2b;
+  --wood-dark: #5c3317;
+  --link: #0000ee;
+  --visited: #551a8b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
 }
 
 body {
-  background: var(--paper);
+  margin: 0;
+  min-height: 100dvh;
   color: var(--ink);
-  font-family:
-    ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: var(--font-comic);
+  background-color: var(--sky-top);
+  background-image:
+    radial-gradient(1.5px 1.5px at 12px 18px, #fff8dc 70%, transparent 71%),
+    radial-gradient(1px 1px at 48px 62px, #ffe066 70%, transparent 71%),
+    radial-gradient(1.5px 1.5px at 86px 28px, #fff 70%, transparent 71%),
+    radial-gradient(1px 1px at 130px 90px, #ffd700 70%, transparent 71%),
+    radial-gradient(2px 2px at 170px 40px, #fff8dc 70%, transparent 71%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='96' viewBox='0 0 72 96'%3E%3Ctext x='8' y='42' font-size='22' opacity='0.18'%3E🌵%3C/text%3E%3Ctext x='40' y='82' font-size='16' opacity='0.12'%3E⭐%3C/text%3E%3C/svg%3E"),
+    linear-gradient(
+      180deg,
+      var(--sky-top) 0%,
+      #3d1a4a 22%,
+      var(--sky-mid) 48%,
+      var(--sky-low) 72%,
+      var(--dust) 100%
+    );
+  background-size:
+    180px 120px,
+    180px 120px,
+    180px 120px,
+    180px 120px,
+    180px 120px,
+    72px 96px,
+    100% 100%;
+  background-attachment: fixed;
+}
+
+::selection {
+  background: var(--hot);
+  color: var(--gold);
 }
 
 input,
-button {
+button,
+textarea {
   font: inherit;
+}
+
+a {
+  color: var(--link);
+}
+
+a:visited {
+  color: var(--visited);
+}
+
+a.ranch-btn,
+a.ranch-btn:visited,
+a.ranch-btn:hover {
+  color: #2b1408;
+  text-decoration: none;
+}
+
+.ranch-sign a,
+.ranch-sign a:visited {
+  color: #3d1f0a;
+}
+
+.ranch-shell {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+}
+
+.ranch-marquee {
+  overflow: hidden;
+  border-bottom: 4px ridge #ff00aa;
+  background: repeating-linear-gradient(
+    -45deg,
+    #111,
+    #111 10px,
+    #222 10px,
+    #222 20px
+  );
+  color: var(--gold);
+  font-family: var(--font-pixel);
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+}
+
+.ranch-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: ranch-scroll 28s linear infinite;
+}
+
+.ranch-marquee-track span {
+  padding: 0.35rem 2rem;
+  white-space: nowrap;
+}
+
+.ranch-page {
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+  display: flex;
+  width: 100%;
+  max-width: 48rem;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.25rem 1.25rem 7rem;
+}
+
+.ranch-sign,
+.ranch-panel,
+.ranch-btn,
+.ranch-btn-ghost,
+.ranch-input,
+.ranch-drop,
+.hit-counter,
+.construction {
+  border-radius: 0;
+}
+
+.ranch-sign {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(92, 51, 23, 0.12) 0 2px,
+      transparent 2px 11px
+    ),
+    linear-gradient(180deg, #d4a574 0%, #b07840 48%, #8b5a2b 100%);
+  border: 6px ridge #5c3317;
+  box-shadow:
+    0 0 0 4px #3d1f0a,
+    8px 10px 0 #12061f;
+  text-shadow: 1px 1px 0 rgba(255, 248, 220, 0.35);
+}
+
+.ranch-panel {
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(139, 90, 43, 0.08) 0 3px,
+      transparent 3px 14px
+    ),
+    var(--card);
+  border: 6px outset #c4a574;
+  box-shadow:
+    inset 0 0 0 2px #fff6e8,
+    6px 6px 0 #12061f;
+}
+
+.ranch-btn {
+  border: 4px outset #e09b3d;
+  background: linear-gradient(180deg, #ffcc4d 0%, #e0851a 55%, #c44512 100%);
+  color: #2b1408;
+  font-family: var(--font-ranch);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 0 #ffe9a8;
+  box-shadow: 4px 4px 0 #12061f;
+  cursor: pointer;
+}
+
+.ranch-btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.ranch-btn:active:not(:disabled) {
+  border-style: inset;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #12061f;
+}
+
+.ranch-btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.ranch-btn-ghost {
+  border: 3px outset #c4a574;
+  background: linear-gradient(180deg, #fcefdc, #e2c49a);
+  color: var(--ink);
+  font-family: var(--font-comic);
+  font-weight: 700;
+  box-shadow: 3px 3px 0 #12061f;
+  cursor: pointer;
+}
+
+.ranch-btn-ghost:hover {
+  filter: brightness(1.05);
+}
+
+.ranch-btn-ghost:active {
+  border-style: inset;
+  transform: translate(1px, 1px);
+}
+
+.ranch-input {
+  border: 3px inset #8b5a2b;
+  background: #fffdf6;
+  color: var(--ink);
+  box-shadow: inset 2px 2px 0 #d9c4a0;
+  outline: none;
+}
+
+.ranch-input:focus {
+  border-color: var(--hot);
+  box-shadow:
+    inset 2px 2px 0 #d9c4a0,
+    0 0 0 3px #ff00aa66;
+}
+
+.ranch-drop {
+  border: 4px dashed var(--wood);
+  background: rgba(252, 239, 220, 0.7);
+}
+
+.ranch-drop-hot {
+  border-color: var(--hot);
+  background: #fff8dc;
+  box-shadow: 0 0 0 4px #ff00aa55;
+}
+
+.ranch-link {
+  color: var(--link);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.ranch-link:visited {
+  color: var(--visited);
+}
+
+.ranch-title {
+  font-family: var(--font-ranch);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  color: #3d1f0a;
+}
+
+.rainbow {
+  background: linear-gradient(
+    90deg,
+    #ff0044,
+    #ff7a00,
+    #ffee00,
+    #22dd55,
+    #2299ff,
+    #cc44ff,
+    #ff0044
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ranch-rainbow 4s linear infinite;
+}
+
+.blink {
+  animation: ranch-blink 1.1s step-end infinite;
+}
+
+.spin-slow {
+  display: inline-block;
+  animation: ranch-spin 6s linear infinite;
+}
+
+.bounce-slow {
+  display: inline-block;
+  animation: ranch-bounce 1.6s ease-in-out infinite;
+}
+
+.new-burst {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border: 2px solid #fff;
+  background: #ff0033;
+  color: #fff;
+  font-family: var(--font-pixel);
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  transform: rotate(-8deg);
+  animation: ranch-pop 1.4s ease-in-out infinite;
+}
+
+.hit-counter {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: #111;
+  border: 3px inset #555;
+}
+
+.hit-counter i {
+  display: inline-flex;
+  min-width: 0.85rem;
+  justify-content: center;
+  padding: 0 0.15rem;
+  background: #050505;
+  color: #39ff14;
+  font-family: var(--font-pixel);
+  font-style: normal;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.now-playing {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-pixel);
+  color: #39ff14;
+}
+
+.eq-bar {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 1rem;
+}
+
+.eq-bar span {
+  width: 3px;
+  background: #39ff14;
+  animation: ranch-eq 0.7s ease-in-out infinite alternate;
+}
+
+.eq-bar span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.eq-bar span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+.eq-bar span:nth-child(4) {
+  animation-delay: 0.08s;
+}
+
+.construction {
+  border: 4px solid #111;
+  background: repeating-linear-gradient(
+    -45deg,
+    #111 0 12px,
+    #ffcc00 12px 24px
+  );
+  color: #111;
+  font-family: var(--font-pixel);
+  letter-spacing: 0.12em;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+.construction span {
+  display: block;
+  background: #ffcc00;
+  padding: 0.2rem 0.6rem;
+}
+
+.ranch-footer {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  text-align: center;
+}
+
+.webring {
+  margin-top: 0.75rem;
+  font-family: var(--font-pixel);
+  font-size: 1.05rem;
+}
+
+.tumbleweed {
+  position: fixed;
+  bottom: 2.4rem;
+  left: 0;
+  z-index: 4;
+  filter: drop-shadow(1px 1px 0 #fcefdc);
+  pointer-events: none;
+  animation: ranch-tumble 18s linear infinite;
+}
+
+.tumbleweed svg {
+  width: 52px;
+  height: 52px;
+}
+
+.fence {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  height: 3.25rem;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #5c3317 0 14px,
+      transparent 14px 46px
+    ),
+    linear-gradient(#0000 0 10px, #8b5a2b 10px 16px, #0000 16px 22px, #8b5a2b 22px 28px, #0000 28px),
+    linear-gradient(#3d1f0a, #3d1f0a);
+  background-size: 46px 100%, 100% 100%, 100% 100%;
+  border-top: 4px solid #2b1408;
+  box-shadow: 0 -8px 18px #12061f88;
+}
+
+.sparkle {
+  position: absolute;
+  font-size: 1.25rem;
+  animation: ranch-twinkle 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ranch-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes ranch-rainbow {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes ranch-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes ranch-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ranch-bounce {
+  50% {
+    transform: translateY(-0.35rem);
+  }
+}
+
+@keyframes ranch-pop {
+  50% {
+    transform: rotate(-8deg) scale(1.12);
+  }
+}
+
+@keyframes ranch-eq {
+  from {
+    height: 20%;
+  }
+  to {
+    height: 100%;
+  }
+}
+
+@keyframes ranch-tumble {
+  from {
+    transform: translateX(-10vw) rotate(0deg);
+  }
+  to {
+    transform: translateX(110vw) rotate(1080deg);
+  }
+}
+
+@keyframes ranch-twinkle {
+  50% {
+    opacity: 0.2;
+    transform: scale(0.7) rotate(20deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ranch-marquee-track,
+  .rainbow,
+  .blink,
+  .spin-slow,
+  .bounce-slow,
+  .new-burst,
+  .eq-bar span,
+  .tumbleweed,
+  .sparkle {
+    animation: none;
+  }
 }

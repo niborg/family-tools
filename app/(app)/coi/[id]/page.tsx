@@ -3,6 +3,16 @@ import { notFound } from "next/navigation";
 import { getCoiReview } from "@/app/actions/coi";
 import { ReviewStatus } from "./review-status";
 
+function BackLink() {
+  return (
+    <p className="mb-6">
+      <Link className="ranch-link font-comic text-sm" href="/">
+        ← back to the shed
+      </Link>
+    </p>
+  );
+}
+
 export default async function CoiReviewPage({
   params,
 }: {
@@ -18,16 +28,10 @@ export default async function CoiReviewPage({
 
     return (
       <main>
-        <p className="mb-6 text-sm">
-          <Link className="text-(--muted) hover:text-(--ink)" href="/">
-            ← Tools
-          </Link>
-        </p>
-        <section className="rounded-2xl border border-(--line) bg-(--card) px-6 py-8">
-          <h2 className="text-xl font-semibold tracking-tight">
-            This review is unavailable
-          </h2>
-          <p className="mt-3 text-(--danger)" role="alert">
+        <BackLink />
+        <section className="ranch-panel px-6 py-8">
+          <h2 className="ranch-title text-2xl">This review is unavailable</h2>
+          <p className="mt-3 font-comic font-bold text-(--danger)" role="alert">
             {result.error}
           </p>
         </section>
@@ -37,11 +41,7 @@ export default async function CoiReviewPage({
 
   return (
     <main>
-      <p className="mb-6 text-sm">
-        <Link className="text-(--muted) hover:text-(--ink)" href="/">
-          ← Tools
-        </Link>
-      </p>
+      <BackLink />
       <ReviewStatus initial={result.review} />
     </main>
   );

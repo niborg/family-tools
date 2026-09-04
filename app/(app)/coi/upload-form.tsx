@@ -21,10 +21,8 @@ export function UploadForm() {
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <label
-        className={`flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed px-4 py-8 text-center transition ${
-          dragOver
-            ? "border-(--accent) bg-white"
-            : "border-(--line) bg-(--paper)/60 hover:bg-white"
+        className={`flex min-h-40 cursor-pointer flex-col items-center justify-center px-4 py-8 text-center ${
+          dragOver ? "ranch-drop-hot ranch-drop" : "ranch-drop"
         }`}
         onDragLeave={() => setDragOver(false)}
         onDragOver={(event) => {
@@ -49,22 +47,23 @@ export function UploadForm() {
           }}
           type="file"
         />
-        <span className="text-sm font-medium">
+        <span className="bounce-slow text-3xl" aria-hidden>
+          🌾
+        </span>
+        <span className="mt-2 font-comic text-sm font-bold">
           {fileName ?? "Drop a PDF here, or click to choose one"}
         </span>
-        <span className="mt-2 text-sm text-(--muted)">PDF, up to 10 MB</span>
+        <span className="mt-2 font-pixel text-base text-(--muted)">
+          PDF, up to 10 MB · hay bales extra
+        </span>
       </label>
       {state?.error ? (
-        <p className="text-sm text-(--danger)" role="alert">
+        <p className="font-comic text-sm font-bold text-(--danger)" role="alert">
           {state.error}
         </p>
       ) : null}
-      <button
-        className="rounded-lg bg-(--accent) px-4 py-2.5 text-sm font-semibold text-white hover:bg-(--accent-hover) disabled:opacity-60"
-        disabled={pending}
-        type="submit"
-      >
-        {pending ? "Uploading…" : "Upload and review"}
+      <button className="ranch-btn px-4 py-2.5" disabled={pending} type="submit">
+        {pending ? "Loading the wagon…" : "Upload and review"}
       </button>
     </form>
   );

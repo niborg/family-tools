@@ -8,28 +8,24 @@ export function LoginForm() {
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
-      <label className="flex flex-col gap-2 text-sm font-medium">
-        Password
+      <label className="flex flex-col gap-2 font-comic text-sm font-bold">
+        Secret handshake (password)
         <input
           autoComplete="current-password"
           autoFocus
-          className="rounded-lg border border-(--line) bg-white px-3 py-2.5 text-base font-normal outline-none focus:border-(--accent) focus:ring-2 focus:ring-(--accent)/20"
+          className="ranch-input px-3 py-2.5 text-base font-normal"
           name="password"
           required
           type="password"
         />
       </label>
       {state?.error ? (
-        <p className="text-sm text-(--danger)" role="alert">
+        <p className="font-comic text-sm font-bold text-(--danger)" role="alert">
           {state.error}
         </p>
       ) : null}
-      <button
-        className="rounded-lg bg-(--accent) px-4 py-2.5 text-sm font-semibold text-white hover:bg-(--accent-hover) disabled:opacity-60"
-        disabled={pending}
-        type="submit"
-      >
-        {pending ? "Checking…" : "Enter"}
+      <button className="ranch-btn px-4 py-2.5" disabled={pending} type="submit">
+        {pending ? "Checking the brand…" : "Saddle up"}
       </button>
     </form>
   );
