@@ -68,7 +68,7 @@ export async function reviewCoiWithAnthropic(
   });
   const body = {
     model,
-    max_tokens: 4096,
+    max_tokens: 1500,
     system: skill,
     messages: [
       {
@@ -84,7 +84,7 @@ export async function reviewCoiWithAnthropic(
           },
           {
             type: "text",
-            text: "Review this Certificate of Insurance.",
+            text: "Is this certificate sufficient? Report blocking gaps only. Follow your output format.",
           },
         ],
       },

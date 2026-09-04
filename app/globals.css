@@ -284,6 +284,104 @@ a.ranch-btn:hover {
   color: #3d1f0a;
 }
 
+.coi-review {
+  margin-top: 1rem;
+  font-family: var(--font-comic);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.coi-review > :first-child {
+  margin-top: 0;
+}
+
+.coi-review h1,
+.coi-review h2,
+.coi-review h3 {
+  font-family: var(--font-ranch);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  color: #3d1f0a;
+  margin-top: 1.25rem;
+}
+
+.coi-review h1 {
+  font-size: 1.65rem;
+}
+
+.coi-review h2 {
+  font-size: 1.4rem;
+}
+
+.coi-review h3 {
+  font-size: 1.2rem;
+}
+
+.coi-review p,
+.coi-review ul,
+.coi-review ol,
+.coi-review pre,
+.coi-review blockquote {
+  margin-top: 0.75rem;
+}
+
+.coi-review ul,
+.coi-review ol {
+  padding-left: 1.35rem;
+}
+
+.coi-review ul {
+  list-style: disc;
+}
+
+.coi-review ol {
+  list-style: decimal;
+}
+
+.coi-review li + li {
+  margin-top: 0.45rem;
+}
+
+.coi-review strong {
+  font-weight: 700;
+}
+
+.coi-review a {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.coi-review pre {
+  padding: 1rem;
+  border: 3px inset #8b5a2b;
+  background: #fffdf6;
+  box-shadow: inset 2px 2px 0 #d9c4a0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.coi-review pre code {
+  font-family: var(--font-comic);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.coi-review :not(pre) > code {
+  padding: 0.05rem 0.3rem;
+  background: #fff6e8;
+}
+
+.coi-review blockquote {
+  padding-left: 0.85rem;
+  border-left: 4px solid #8b5a2b;
+}
+
+.coi-review hr {
+  margin: 1.25rem 0;
+  border: 0;
+  border-top: 2px solid #8b5a2b;
+}
+
 .rainbow {
   background: linear-gradient(
     90deg,
