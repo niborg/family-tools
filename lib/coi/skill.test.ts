@@ -19,7 +19,9 @@ describe("loadCoiSkill", () => {
     expect(skill).toMatch(/ranch-coi-review/);
     expect(skill).toMatch(/Piuma Rd/);
     expect(skill).toMatch(/SUBR WVD/);
-    expect(skill).toMatch(/do not report it as missing/);
+    expect(skill).toMatch(/A mark there is enough/);
+    expect(skill).toMatch(/If no endorsement on that subject is attached, the check stands/);
+    expect(skill).not.toMatch(/Endorsement pages, not just the certificate/);
     expect(skill).toMatch(/This certificate is not sufficient/);
     expect(skill).not.toMatch(/Worth asking/);
     expect(skill).not.toMatch(/what's already right/);

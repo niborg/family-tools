@@ -84,7 +84,7 @@ export async function reviewCoiWithAnthropic(
           },
           {
             type: "text",
-            text: "Is this certificate sufficient? Read every coverage line's ADDL INSD and SUBR WVD columns before you decide a box is blank. Report blocking gaps only. Follow your output format.",
+            text: "Is this certificate sufficient? Read every coverage line's ADDL INSD and SUBR WVD columns before you decide a box is blank. A checked box is enough unless an attached endorsement on that same subject contradicts it. Report blocking gaps only. Follow your output format.",
           },
         ],
       },
