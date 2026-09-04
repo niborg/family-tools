@@ -1,6 +1,6 @@
 # Tools
 
-Shared family dashboard at [tools.knipe.io](https://tools.knipe.io). Next.js, one shared password, hosted on Cloudflare Workers. COI PDFs live in R2.
+Shared family dashboard at [ranch.knipe.io](https://ranch.knipe.io). Next.js, one shared password, hosted on Cloudflare Workers. COI PDFs live in R2.
 
 Anyone with the password can get in. That is intentional.
 
@@ -60,7 +60,7 @@ Code: [`lib/auth.ts`](lib/auth.ts), [`app/actions/auth.ts`](app/actions/auth.ts)
 
 ## Deploy to Cloudflare
 
-The live app is the Worker named `tools`, hostname **tools.knipe.io**. Config is [`wrangler.jsonc`](wrangler.jsonc). DNS for `knipe.io` stays on Cloudflare; deploy creates the `tools` custom domain record. Mail on `knipe.io` is not touched (MX/SPF/DKIM stay on the apex).
+The live app is the Worker named `tools`, hostname **ranch.knipe.io**. Config is [`wrangler.jsonc`](wrangler.jsonc). DNS for `knipe.io` stays on Cloudflare; deploy creates the `ranch` custom domain record. Mail on `knipe.io` is not touched (MX/SPF/DKIM stay on the apex).
 
 ```bash
 npx wrangler login          # once, account that owns knipe.io
@@ -77,7 +77,7 @@ Create the `family-tools-coi` R2 bucket once. The Worker binding is `COI_BUCKET`
 
 Later deploys are just `npm run deploy`.
 
-If deploy complains that `tools.knipe.io` already has a DNS record, delete that `tools` record in Cloudflare DNS (only that name) and deploy again.
+If deploy complains that `ranch.knipe.io` already has a DNS record, delete that `ranch` record in Cloudflare DNS (only that name) and deploy again. If you previously used `tools.knipe.io`, delete that `tools` record too so it does not keep pointing at the old hostname.
 
 ## Layout
 
