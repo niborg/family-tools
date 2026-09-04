@@ -20,9 +20,9 @@ describe("isReviewId", () => {
 });
 
 describe("canStartReview", () => {
-  it("only starts queued reviews", () => {
+  it("starts queued or stuck processing reviews", () => {
     expect(canStartReview("queued")).toBe(true);
-    expect(canStartReview("processing")).toBe(false);
+    expect(canStartReview("processing")).toBe(true);
     expect(canStartReview("done")).toBe(false);
     expect(canStartReview("error")).toBe(false);
   });

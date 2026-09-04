@@ -14,6 +14,12 @@ describe("userFacingReviewError", () => {
     );
   });
 
+  it("maps timeouts", () => {
+    expect(userFacingReviewError(new Error("Anthropic request timed out"))).toBe(
+      "The review took too long. Try again.",
+    );
+  });
+
   it("hides unexpected details", () => {
     expect(userFacingReviewError(new Error("ECONNRESET"))).toBe(
       "The review did not finish. Try uploading again.",

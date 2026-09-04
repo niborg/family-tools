@@ -17,27 +17,38 @@ export function ReviewStatus({ initial }: { initial: CoiReviewPublic }) {
 
     let cancelled = false;
 
-    async function tick() {
-      const next = await getCoiReview(review.id);
-      if (cancelled) {
-        return;
+    async function loop() {
+      while (!cancelled) {
+        try {
+          const next = await getCoiReview(review.id, true);
+          if (cancelled) {
+            return;
+          }
+          if (!next.ok) {
+            setPollError(next.error);
+          } else {
+            setPollError(null);
+            setReview(next.review);
+            if (
+              next.review.status !== "queued" &&
+              next.review.status !== "processing"
+            ) {
+              return;
+            }
+          }
+        } catch {
+          if (!cancelled) {
+            setPollError("The review is still running. Retrying…");
+          }
+        }
+        await new Promise((resolve) => setTimeout(resolve, 2000));
       }
-      if (!next.ok) {
-        setPollError(next.error);
-        return;
-      }
-      setPollError(null);
-      setReview(next.review);
     }
 
-    const timer = setInterval(() => {
-      void tick();
-    }, 2000);
-    void tick();
+    void loop();
 
     return () => {
       cancelled = true;
-      clearInterval(timer);
     };
   }, [review.id, waiting]);
 

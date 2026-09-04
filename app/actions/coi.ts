@@ -10,7 +10,6 @@ import {
   type CoiReviewPublic,
 } from "@/lib/coi/types";
 import { validateCoiFile } from "@/lib/coi/validate";
-import { scheduleBackground } from "@/lib/r2";
 
 export type UploadCoiState = {
   error: string;
@@ -19,10 +18,6 @@ export type UploadCoiState = {
 export type GetCoiReviewResult =
   | { ok: true; review: CoiReviewPublic }
   | { ok: false; error: string; missing?: boolean };
-
-async function kickOffReview(id: string): Promise<void> {
-  await scheduleBackground(runCoiReview(id));
-}
 
 export async function uploadCoi(
   _prev: UploadCoiState | undefined,
@@ -51,11 +46,13 @@ export async function uploadCoi(
     return { error: "Uploads aren't configured yet." };
   }
 
-  await kickOffReview(id);
   redirect(`/coi/${id}`);
 }
 
-export async function getCoiReview(id: string): Promise<GetCoiReviewResult> {
+export async function getCoiReview(
+  id: string,
+  run = false,
+): Promise<GetCoiReviewResult> {
   if (!(await isAuthenticated())) {
     return { ok: false, error: "Please log in again." };
   }
@@ -76,8 +73,12 @@ export async function getCoiReview(id: string): Promise<GetCoiReviewResult> {
     return { ok: false, error: "We couldn't find that upload.", missing: true };
   }
 
-  if (meta.status === "queued") {
-    await kickOffReview(id);
+  // The wait page SSR must return immediately so the spinner can render.
+  // The client poll passes `run` and awaits Anthropic on that request, so a
+  // hung waitUntil job cannot leave status stuck at "processing" forever.
+  if (run && (meta.status === "queued" || meta.status === "processing")) {
+    await runCoiReview(id);
+    meta = (await readCoiMeta(id)) ?? meta;
   }
 
   return { ok: true, review: toPublicReview(id, meta) };

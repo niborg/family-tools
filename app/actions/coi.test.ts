@@ -4,7 +4,7 @@ const isAuthenticated = vi.fn();
 const writeCoiPdf = vi.fn();
 const writeCoiMeta = vi.fn();
 const readCoiMeta = vi.fn();
-const scheduleBackground = vi.fn();
+const runCoiReview = vi.fn();
 const redirect = vi.fn((url: string) => {
   throw new Error(`NEXT_REDIRECT:${url}`);
 });
@@ -23,12 +23,8 @@ vi.mock("@/lib/coi/storage", () => ({
   readCoiMeta: (...args: unknown[]) => readCoiMeta(...args),
 }));
 
-vi.mock("@/lib/r2", () => ({
-  scheduleBackground: (...args: unknown[]) => scheduleBackground(...args),
-}));
-
 vi.mock("@/lib/coi/review", () => ({
-  runCoiReview: vi.fn(),
+  runCoiReview: (...args: unknown[]) => runCoiReview(...args),
 }));
 
 import { getCoiReview, uploadCoi } from "./coi";
@@ -46,7 +42,7 @@ describe("uploadCoi", () => {
     isAuthenticated.mockReset();
     writeCoiPdf.mockReset();
     writeCoiMeta.mockReset();
-    scheduleBackground.mockReset();
+    runCoiReview.mockReset();
     redirect.mockClear();
   });
 
@@ -72,7 +68,6 @@ describe("uploadCoi", () => {
     isAuthenticated.mockResolvedValue(true);
     writeCoiPdf.mockResolvedValue(undefined);
     writeCoiMeta.mockResolvedValue(undefined);
-    scheduleBackground.mockResolvedValue(undefined);
 
     const file = new File([new Uint8Array(32)], "acme.pdf", {
       type: "application/pdf",
@@ -83,7 +78,7 @@ describe("uploadCoi", () => {
     );
     expect(writeCoiPdf).toHaveBeenCalledOnce();
     expect(writeCoiMeta).toHaveBeenCalledOnce();
-    expect(scheduleBackground).toHaveBeenCalledOnce();
+    expect(runCoiReview).not.toHaveBeenCalled();
     expect(redirect.mock.calls[0][0]).toMatch(
       /^\/coi\/[0-9a-f-]{36}$/i,
     );
@@ -108,7 +103,7 @@ describe("getCoiReview", () => {
   beforeEach(() => {
     isAuthenticated.mockReset();
     readCoiMeta.mockReset();
-    scheduleBackground.mockReset();
+    runCoiReview.mockReset();
   });
 
   it("marks unknown ids as missing", async () => {
@@ -121,14 +116,13 @@ describe("getCoiReview", () => {
     });
   });
 
-  it("kicks off a still-queued review", async () => {
+  it("does not start the review on a status peek", async () => {
     isAuthenticated.mockResolvedValue(true);
     readCoiMeta.mockResolvedValue({
       status: "queued",
       filename: "acme.pdf",
       createdAt: "2026-09-04T00:00:00.000Z",
     });
-    scheduleBackground.mockResolvedValue(undefined);
 
     await expect(
       getCoiReview("2c1d6b3a-4f10-4a22-9b80-6d2e1f0a9c11"),
@@ -140,6 +134,63 @@ describe("getCoiReview", () => {
         filename: "acme.pdf",
       },
     });
-    expect(scheduleBackground).toHaveBeenCalledOnce();
+    expect(runCoiReview).not.toHaveBeenCalled();
+  });
+
+  it("runs a still-queued review before returning status", async () => {
+    isAuthenticated.mockResolvedValue(true);
+    readCoiMeta
+      .mockResolvedValueOnce({
+        status: "queued",
+        filename: "acme.pdf",
+        createdAt: "2026-09-04T00:00:00.000Z",
+      })
+      .mockResolvedValueOnce({
+        status: "done",
+        filename: "acme.pdf",
+        createdAt: "2026-09-04T00:00:00.000Z",
+        result: "Looks fine.",
+      });
+    runCoiReview.mockResolvedValue(undefined);
+
+    await expect(
+      getCoiReview("2c1d6b3a-4f10-4a22-9b80-6d2e1f0a9c11", true),
+    ).resolves.toEqual({
+      ok: true,
+      review: {
+        id: "2c1d6b3a-4f10-4a22-9b80-6d2e1f0a9c11",
+        status: "done",
+        filename: "acme.pdf",
+        result: "Looks fine.",
+      },
+    });
+    expect(runCoiReview).toHaveBeenCalledWith(
+      "2c1d6b3a-4f10-4a22-9b80-6d2e1f0a9c11",
+    );
+  });
+
+  it("retries a stuck processing review", async () => {
+    isAuthenticated.mockResolvedValue(true);
+    readCoiMeta
+      .mockResolvedValueOnce({
+        status: "processing",
+        filename: "acme.pdf",
+        createdAt: "2026-09-04T00:00:00.000Z",
+      })
+      .mockResolvedValueOnce({
+        status: "error",
+        filename: "acme.pdf",
+        createdAt: "2026-09-04T00:00:00.000Z",
+        error: "The review took too long. Try again.",
+      });
+    runCoiReview.mockResolvedValue(undefined);
+
+    await expect(
+      getCoiReview("2c1d6b3a-4f10-4a22-9b80-6d2e1f0a9c11", true),
+    ).resolves.toMatchObject({
+      ok: true,
+      review: { status: "error" },
+    });
+    expect(runCoiReview).toHaveBeenCalledOnce();
   });
 });

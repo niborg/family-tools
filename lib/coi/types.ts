@@ -26,7 +26,7 @@ export function isReviewId(id: string): boolean {
 }
 
 export function canStartReview(status: CoiStatus): boolean {
-  return status === "queued";
+  return status === "queued" || status === "processing";
 }
 
 export function toPublicReview(id: string, meta: CoiMeta): CoiReviewPublic {

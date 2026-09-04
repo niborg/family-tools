@@ -3,6 +3,7 @@ import { readCoiMeta, readCoiPdf, writeCoiMeta } from "./storage";
 import { canStartReview } from "./types";
 
 const DEFAULT_MODEL = "claude-sonnet-4-6";
+const ANTHROPIC_TIMEOUT_MS = 90_000;
 const inFlight = new Set<string>();
 
 type AnthropicContent = {
@@ -22,6 +23,9 @@ export function userFacingReviewError(error: unknown): string {
   }
   if (message.includes("429")) {
     return "The reviewer is busy. Try again in a minute.";
+  }
+  if (message.includes("timed out") || message.includes("TimeoutError")) {
+    return "The review took too long. Try again.";
   }
   return "The review did not finish. Try uploading again.";
 }
@@ -58,6 +62,10 @@ export async function reviewCoiWithAnthropic(
 ): Promise<string> {
   const key = requireAnthropicKey();
   const model = process.env.ANTHROPIC_MODEL || DEFAULT_MODEL;
+  console.log("COI review calling Anthropic", {
+    bytes: pdf.byteLength,
+    model,
+  });
   const body = {
     model,
     max_tokens: 4096,
@@ -83,16 +91,28 @@ export async function reviewCoiWithAnthropic(
     ],
   };
 
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "x-api-key": key,
-      "anthropic-version": "2023-06-01",
-      "anthropic-beta": "pdfs-2024-09-25",
-    },
-    body: JSON.stringify(body),
-  });
+  let response: Response;
+  try {
+    response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": key,
+        "anthropic-version": "2023-06-01",
+        "anthropic-beta": "pdfs-2024-09-25",
+      },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(ANTHROPIC_TIMEOUT_MS),
+    });
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      (error.name === "TimeoutError" || error.name === "AbortError")
+    ) {
+      throw new Error("Anthropic request timed out");
+    }
+    throw error;
+  }
 
   const data = (await response.json()) as AnthropicResponse;
   if (!response.ok) {
@@ -116,6 +136,7 @@ export async function runCoiReview(id: string): Promise<void> {
     }
 
     await writeCoiMeta(id, { ...meta, status: "processing" });
+    console.log("COI review started", id);
 
     const pdf = await readCoiPdf(id);
     if (!pdf) {
@@ -129,6 +150,7 @@ export async function runCoiReview(id: string): Promise<void> {
 
     const result = await reviewCoiWithAnthropic(pdf, loadCoiSkill());
     await writeCoiMeta(id, { ...meta, status: "done", result });
+    console.log("COI review finished", id);
   } catch (error) {
     const meta = await readCoiMeta(id);
     if (meta) {
