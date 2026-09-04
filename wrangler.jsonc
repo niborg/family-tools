@@ -26,4 +26,11 @@
       "bucket_name": "family-tools-coi",
     },
   ],
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "invocation_logs": true,
+      "head_sampling_rate": 1,
+    },
+  },
 }
