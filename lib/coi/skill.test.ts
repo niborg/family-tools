@@ -16,6 +16,7 @@ describe("loadCoiSkill", () => {
 
     const skill = loadCoiSkill();
     expect(skill).toBe(fromDisk);
-    expect(skill).toMatch(/placeholder/i);
+    expect(skill).toMatch(/ranch-coi-review/);
+    expect(skill).toMatch(/Piuma Rd/);
   });
 });

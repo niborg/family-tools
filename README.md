@@ -95,7 +95,7 @@ open-next.config.ts OpenNext Cloudflare adapter
 
 New tools go under `app/(app)/` so they stay behind the password.
 
-Replace [`skills/coi-review/SKILL.md`](skills/coi-review/SKILL.md) with the real review instructions when they are ready. Redeploy after changing it.
+Review instructions live in [`skills/coi-review/SKILL.md`](skills/coi-review/SKILL.md). Redeploy after changing it.
 
 ## Cost
 
