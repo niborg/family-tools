@@ -16,7 +16,7 @@
   ],
   "routes": [
     {
-      "pattern": "tools.knipe.io",
+      "pattern": "ranch.knipe.io",
       "custom_domain": true,
     },
   ],
