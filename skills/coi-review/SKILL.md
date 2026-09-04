@@ -7,7 +7,7 @@ description: Evaluates whether a production company's certificate of insurance i
 
 Evaluate a producer's certificate of insurance for a shoot at 25575 Piuma Rd., Calabasas, CA 91302. The COI is the only input — don't assume access to the location agreement.
 
-Extract with `pdftotext -layout`; the ADDL INSD / SUBR WVD checkbox columns get lost otherwise. Always read page 2+ — endorsements are attached there.
+You are reading the PDF pages, not extracted text. On the ACORD coverage grid, the last two columns of each policy line are **ADDL INSD** and **SUBR WVD**. They are small. An X, check, or Y in a cell is marked — do not call that box blank. Always read page 2+ — endorsements are attached there.
 
 ## Owner entity
 
@@ -25,9 +25,9 @@ The certificate is sufficient only if every item below holds. Anything that fail
 - Fail: "only with respect to claims arising out of the negligence of the Named Insured"
 - Pass: CG 20 11 (Managers or Lessors of Premises), or blanket wording covering injury "caused, in whole or in part, by your acts or omissions… **or in connection with your premises owned by or rented to you**."
 
-**2. Waiver of subrogation on workers' comp.** Check the SUBR WVD column on the WC line. **WC policies cannot have additional insureds** — structurally impossible — so the waiver is the only available protection. Cal. Labor Code §3852 gives the comp carrier a statutory right to sue the landowner after paying an injured crew member. Ask for **WC 04 03 06** (California). Missing workers' comp entirely also fails.
+**2. Waiver of subrogation on workers' comp.** Look at the SUBR WVD column on the workers' compensation row. If that cell is marked, the waiver is on the certificate — do not report it as missing. **WC policies cannot have additional insureds** — structurally impossible — so the waiver is the only available protection. Cal. Labor Code §3852 gives the comp carrier a statutory right to sue the landowner after paying an injured crew member. Ask for **WC 04 03 06** (California) only when that WC SUBR WVD box is actually blank. Missing workers' comp entirely also fails.
 
-**3. Endorsement pages, not just the certificate.** The ACORD form says it itself: "A statement on this certificate does not confer rights to the certificate holder in lieu of such endorsement(s)." A checked box with no endorsement attached is unverified.
+**3. Endorsement pages, not just the certificate.** The ACORD form says it itself: "A statement on this certificate does not confer rights to the certificate holder in lieu of such endorsement(s)." A checked box with no endorsement attached is an endorsement gap, not a missing checkbox. If SUBR WVD is marked, say the endorsement is missing — not that there is no waiver.
 
 **4. Named insured** is the company booking the shoot. AI status on the wrong entity's policy is worthless.
 
