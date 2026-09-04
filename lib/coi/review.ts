@@ -2,8 +2,8 @@ import { loadCoiSkill } from "./skill";
 import { readCoiMeta, readCoiPdf, writeCoiMeta } from "./storage";
 import { canStartReview } from "./types";
 
-const DEFAULT_MODEL = "claude-sonnet-4-6";
-const ANTHROPIC_TIMEOUT_MS = 90_000;
+const DEFAULT_MODEL = "claude-opus-5";
+const ANTHROPIC_TIMEOUT_MS = 180_000;
 const inFlight = new Set<string>();
 
 type AnthropicContent = {
@@ -68,7 +68,7 @@ export async function reviewCoiWithAnthropic(
   });
   const body = {
     model,
-    max_tokens: 4096,
+    max_tokens: 16000,
     system: skill,
     messages: [
       {
@@ -84,7 +84,7 @@ export async function reviewCoiWithAnthropic(
           },
           {
             type: "text",
-            text: "Review this Certificate of Insurance.",
+            text: "Is this certificate sufficient? Read every coverage line's ADDL INSD and SUBR WVD columns before you decide a box is blank. Report blocking gaps only. Follow your output format.",
           },
         ],
       },

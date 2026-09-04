@@ -18,5 +18,11 @@ describe("loadCoiSkill", () => {
     expect(skill).toBe(fromDisk);
     expect(skill).toMatch(/ranch-coi-review/);
     expect(skill).toMatch(/Piuma Rd/);
+    expect(skill).toMatch(/SUBR WVD/);
+    expect(skill).toMatch(/do not report it as missing/);
+    expect(skill).toMatch(/This certificate is not sufficient/);
+    expect(skill).not.toMatch(/Worth asking/);
+    expect(skill).not.toMatch(/what's already right/);
+    expect(skill).not.toMatch(/Coverage limitations to flag/);
   });
 });

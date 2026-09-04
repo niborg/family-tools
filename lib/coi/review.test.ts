@@ -39,6 +39,17 @@ describe("textFromAnthropicResponse", () => {
     ).toBe("Insured: Acme\n\nExpires next June");
   });
 
+  it("ignores thinking blocks", () => {
+    expect(
+      textFromAnthropicResponse({
+        content: [
+          { type: "thinking", text: "" },
+          { type: "text", text: "## Sufficient" },
+        ],
+      }),
+    ).toBe("## Sufficient");
+  });
+
   it("throws when Anthropic returns an error or no text", () => {
     expect(() =>
       textFromAnthropicResponse({ error: { message: "overloaded_error" } }),

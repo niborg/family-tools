@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getCoiReview } from "@/app/actions/coi";
 import type { CoiReviewPublic } from "@/lib/coi/types";
+import { ReviewMarkdown } from "./review-markdown";
 
 export function ReviewStatus({ initial }: { initial: CoiReviewPublic }) {
   const [review, setReview] = useState(initial);
@@ -75,9 +76,7 @@ export function ReviewStatus({ initial }: { initial: CoiReviewPublic }) {
       {review.status === "done" ? (
         <>
           <h2 className="ranch-title mt-2 text-2xl">Review</h2>
-          <div className="mt-4 whitespace-pre-wrap font-comic text-[15px] leading-7">
-            {review.result}
-          </div>
+          {review.result ? <ReviewMarkdown markdown={review.result} /> : null}
         </>
       ) : null}
       {review.status === "error" ? (
