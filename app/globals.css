@@ -152,7 +152,7 @@ a.ranch-btn:hover {
   max-width: 48rem;
   flex: 1;
   flex-direction: column;
-  padding: 1.25rem 1.25rem 7rem;
+  padding: 1.25rem 1.25rem 9.5rem;
 }
 
 .ranch-sign,
@@ -416,17 +416,26 @@ a.ranch-btn:hover {
 
 .tumbleweed {
   position: fixed;
-  bottom: 2.4rem;
+  bottom: 1.15rem;
   left: 0;
   z-index: 4;
-  filter: drop-shadow(1px 1px 0 #fcefdc);
   pointer-events: none;
-  animation: ranch-tumble 18s linear infinite;
+  animation: ranch-tumble-x 16s linear infinite;
+  animation-delay: -4s;
 }
 
-.tumbleweed svg {
-  width: 52px;
-  height: 52px;
+.tumbleweed-hop {
+  display: block;
+  animation: ranch-tumble-hop 0.9s cubic-bezier(0.33, 0.82, 0.4, 1) infinite;
+}
+
+.tumbleweed-spin {
+  display: block;
+  width: 7rem;
+  height: auto;
+  filter: drop-shadow(0 3px 2px #12061f88) saturate(0.95) brightness(1.22) contrast(1.12)
+    hue-rotate(-10deg);
+  animation: ranch-tumble-spin 1.8s linear infinite;
 }
 
 .fence {
@@ -505,12 +514,28 @@ a.ranch-btn:hover {
   }
 }
 
-@keyframes ranch-tumble {
+@keyframes ranch-tumble-x {
   from {
-    transform: translateX(-10vw) rotate(0deg);
+    transform: translateX(-8rem);
   }
   to {
-    transform: translateX(110vw) rotate(1080deg);
+    transform: translateX(100vw);
+  }
+}
+
+@keyframes ranch-tumble-hop {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  42% {
+    transform: translateY(-0.55rem);
+  }
+}
+
+@keyframes ranch-tumble-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -530,6 +555,8 @@ a.ranch-btn:hover {
   .new-burst,
   .eq-bar span,
   .tumbleweed,
+  .tumbleweed-hop,
+  .tumbleweed-spin,
   .sparkle {
     animation: none;
   }

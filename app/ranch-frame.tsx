@@ -8,13 +8,7 @@ function visitorNumber() {
   return String(137 + (days % 8642)).padStart(6, "0");
 }
 
-export function RanchFrame({
-  children,
-  compact,
-}: {
-  children: ReactNode;
-  compact?: boolean;
-}) {
+export function RanchFrame({ children }: { children: ReactNode }) {
   const digits = visitorNumber().split("");
 
   return (
@@ -25,7 +19,7 @@ export function RanchFrame({
           <span>{MARQUEE}</span>
         </div>
       </div>
-      <div className={`ranch-page ${compact ? "justify-center" : ""}`}>
+      <div className="ranch-page">
         {children}
         <footer className="ranch-footer">
           <p className="construction mb-3">
@@ -58,23 +52,15 @@ export function RanchFrame({
         </footer>
       </div>
       <div className="tumbleweed" aria-hidden>
-        <svg height="52" viewBox="0 0 32 32" width="52">
-          <circle
-            cx="16"
-            cy="16"
-            fill="#c4a574"
-            fillOpacity="0.35"
-            r="12"
-            stroke="#3d1f0a"
-            strokeWidth="2"
+        <span className="tumbleweed-hop">
+          <img
+            alt=""
+            className="tumbleweed-spin"
+            height={148}
+            src="/tumbleweed.png"
+            width={180}
           />
-          <path
-            d="M16 4 C10 10 10 22 16 28 C22 22 22 10 16 4 M4 16 C10 10 22 10 28 16 C22 22 10 22 4 16 M8 8 C16 12 16 20 24 24 M24 8 C16 12 16 20 8 24"
-            fill="none"
-            stroke="#5c3317"
-            strokeWidth="1.6"
-          />
-        </svg>
+        </span>
       </div>
       <div className="fence" aria-hidden />
     </div>

@@ -11,8 +11,8 @@ export default async function LoginPage() {
   }
 
   return (
-    <RanchFrame compact>
-      <main className="ranch-sign relative mx-auto w-full max-w-md p-8">
+    <RanchFrame>
+      <main className="ranch-sign relative mx-auto my-auto w-full max-w-md p-8">
         <span className="sparkle top-3 left-4">✨</span>
         <span className="sparkle right-6 bottom-4">⭐</span>
         <p className="text-center font-pixel text-lg text-[#3d1f0a]">
