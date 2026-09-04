@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { logout } from "@/app/actions/auth";
 import { isAuthenticated } from "@/lib/auth";
@@ -22,7 +23,11 @@ export default async function AppLayout({
           <p className="text-sm font-medium tracking-wide text-(--muted) uppercase">
             knipe.io
           </p>
-          <h1 className="text-xl font-semibold tracking-tight">Tools</h1>
+          <h1 className="text-xl font-semibold tracking-tight">
+            <Link className="hover:text-(--accent)" href="/">
+              Tools
+            </Link>
+          </h1>
         </div>
         <form action={logout}>
           <button

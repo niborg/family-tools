@@ -20,4 +20,10 @@
       "custom_domain": true,
     },
   ],
+  "r2_buckets": [
+    {
+      "binding": "COI_BUCKET",
+      "bucket_name": "family-tools-coi",
+    },
+  ],
 }
