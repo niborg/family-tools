@@ -138,7 +138,11 @@ export async function runCoiReview(id: string): Promise<void> {
         error: userFacingReviewError(error),
       });
     }
-    console.error("COI review failed", id, error);
+    console.error("COI review failed", {
+      id,
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
   } finally {
     inFlight.delete(id);
   }
