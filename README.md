@@ -36,9 +36,9 @@ Open [http://localhost:3000](http://localhost:3000). Log in, then you should see
 | `npm test` | Vitest — auth, COI, crew hours, review helpers |
 | `npm run build` | Production Next.js build (used by deploy) |
 | `npm run preview` | Build + run the Worker locally (needs `.dev.vars`) |
-| `npm run deploy` | Build with OpenNext and upload to Cloudflare |
+| `npm run deploy` | Manual OpenNext upload to Cloudflare (usually unnecessary) |
 
-`npm run deploy` is an **npm script**. Do not use `npx run deploy`.
+Pushing `main` to GitHub deploys [ranch.knipe.io](https://ranch.knipe.io). `npm run deploy` is only for a local emergency upload. It is an **npm script**. Do not use `npx run deploy`.
 
 Workers-runtime preview:
 
@@ -61,7 +61,11 @@ Code: [`lib/auth.ts`](lib/auth.ts), [`lib/login-rate-limit.ts`](lib/login-rate-l
 
 ## Deploy to Cloudflare
 
-The live app is the Worker named `ranch`, hostname **ranch.knipe.io**. Config is [`wrangler.jsonc`](wrangler.jsonc). DNS for `knipe.io` stays on Cloudflare; deploy creates the `ranch` custom domain record. Apex mail on `knipe.io` is not touched (MX/SPF/DKIM stay on the root). Crew-hour mail uses Email Sending on the `ranch` subdomain only.
+A push to `main` on GitHub deploys the live app. Cloudflare Workers Builds watches [niborg/ranch-tools](https://github.com/niborg/ranch-tools), builds with OpenNext, and uploads the Worker named `ranch` at **ranch.knipe.io**. Other branches do not go live.
+
+Do not run `npm run deploy` after a `main` push unless that GitHub build failed. The local script is the same OpenNext upload, used for first-time setup or if Builds is down.
+
+Config is [`wrangler.jsonc`](wrangler.jsonc). DNS for `knipe.io` stays on Cloudflare; deploy creates the `ranch` custom domain record. Apex mail on `knipe.io` is not touched (MX/SPF/DKIM stay on the root). Crew-hour mail uses Email Sending on the `ranch` subdomain only.
 
 ## Crew hours
 
@@ -88,7 +92,7 @@ Secrets are stored on the Worker, not in the repo. Until the login secrets are s
 
 Create the `family-tools-coi` R2 bucket once. The Worker binding is `COI_BUCKET` in [`wrangler.jsonc`](wrangler.jsonc).
 
-Later deploys are just `npm run deploy`.
+Later deploys are a push to `main`. Use `npm run deploy` only if you need to publish without GitHub.
 
 If deploy complains that `ranch.knipe.io` already has a DNS record, delete that `ranch` record in Cloudflare DNS (only that name) and deploy again. If you previously used `tools.knipe.io`, delete that `tools` record too so it does not keep pointing at the old hostname.
 
@@ -113,7 +117,7 @@ open-next.config.ts     OpenNext Cloudflare adapter
 
 New tools go under `app/(app)/` so they stay behind the password.
 
-Review instructions live in [`skills/coi-review/SKILL.md`](skills/coi-review/SKILL.md). Redeploy after changing it.
+Review instructions live in [`skills/coi-review/SKILL.md`](skills/coi-review/SKILL.md). Push to `main` after changing it.
 
 ## Cost
 

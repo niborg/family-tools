@@ -7,3 +7,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+# Ranch deploys
+
+Pushing `main` to GitHub deploys ranch.knipe.io (Cloudflare Workers Builds). Do not also run `npm run deploy` after a main push unless that build failed. Other branches stay off production.
