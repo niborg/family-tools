@@ -60,7 +60,7 @@ Code: [`lib/auth.ts`](lib/auth.ts), [`app/actions/auth.ts`](app/actions/auth.ts)
 
 ## Deploy to Cloudflare
 
-The live app is the Worker named `tools`, hostname **ranch.knipe.io**. Config is [`wrangler.jsonc`](wrangler.jsonc). DNS for `knipe.io` stays on Cloudflare; deploy creates the `ranch` custom domain record. Mail on `knipe.io` is not touched (MX/SPF/DKIM stay on the apex).
+The live app is the Worker named `ranch`, hostname **ranch.knipe.io**. Config is [`wrangler.jsonc`](wrangler.jsonc). DNS for `knipe.io` stays on Cloudflare; deploy creates the `ranch` custom domain record. Mail on `knipe.io` is not touched (MX/SPF/DKIM stay on the apex).
 
 ```bash
 npx wrangler login          # once, account that owns knipe.io
