@@ -591,6 +591,10 @@ a.ranch-btn:hover {
   animation: holly-flip 14s ease-in-out infinite;
 }
 
+.holly-wink-wrap {
+  position: relative;
+}
+
 .holly-figure {
   display: block;
   width: 100%;
@@ -598,74 +602,74 @@ a.ranch-btn:hover {
   filter: drop-shadow(2px 3px 0 rgba(18, 6, 31, 0.42));
 }
 
-.holly-bubbles {
+.holly-wink {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: holly-wink 8.5s infinite;
+}
+
+.holly-hearts {
   position: absolute;
   inset: -1.5rem 0 18% 0;
   overflow: visible;
 }
 
-.holly-bubble {
+.holly-heart {
   position: absolute;
   bottom: 8%;
-  border-radius: 50%;
-  border: 1.5px solid rgba(255, 255, 255, 0.8);
-  background:
-    radial-gradient(circle at 32% 28%, #fff 0 14%, transparent 18%),
-    radial-gradient(circle at 70% 72%, #7ec8ff44, #ffffff18 55%, #7ec8ff33);
-  box-shadow: inset -1px -1px 0 #ffffff55;
-  animation: holly-bubble 6s ease-in infinite;
+  color: #ff2d6a;
+  font-size: 0.85rem;
+  line-height: 1;
+  text-shadow: 0 1px 0 #3d1f0a66;
+  animation: holly-heart 6s ease-in infinite;
 }
 
-.holly-bubble:nth-child(1) {
+.holly-heart:nth-child(1) {
   left: 10%;
-  width: 0.55rem;
-  height: 0.55rem;
+  font-size: 0.7rem;
 }
 
-.holly-bubble:nth-child(2) {
+.holly-heart:nth-child(2) {
   left: 38%;
-  width: 0.85rem;
-  height: 0.85rem;
+  font-size: 1.05rem;
   animation-delay: 0.9s;
   animation-duration: 6.8s;
 }
 
-.holly-bubble:nth-child(3) {
+.holly-heart:nth-child(3) {
   left: 62%;
-  width: 0.45rem;
-  height: 0.45rem;
+  font-size: 0.6rem;
   animation-delay: 1.7s;
   animation-duration: 5.4s;
 }
 
-.holly-bubble:nth-child(4) {
+.holly-heart:nth-child(4) {
   left: 22%;
-  width: 0.7rem;
-  height: 0.7rem;
+  font-size: 0.9rem;
   animation-delay: 2.6s;
 }
 
-.holly-bubble:nth-child(5) {
+.holly-heart:nth-child(5) {
   left: 78%;
-  width: 0.95rem;
-  height: 0.95rem;
+  font-size: 1.15rem;
   animation-delay: 3.4s;
   animation-duration: 7.2s;
+  color: #ff4d8d;
 }
 
-.holly-bubble:nth-child(6) {
+.holly-heart:nth-child(6) {
   left: 48%;
-  width: 0.4rem;
-  height: 0.4rem;
+  font-size: 0.55rem;
   animation-delay: 4.1s;
   animation-duration: 5.8s;
 }
 
-.holly-bubble:nth-child(7) {
+.holly-heart:nth-child(7) {
   left: 4%;
-  width: 0.6rem;
-  height: 0.6rem;
+  font-size: 0.8rem;
   animation-delay: 5s;
+  color: #ff0044;
 }
 
 @media (min-width: 40rem) {
@@ -770,7 +774,7 @@ a.ranch-btn:hover {
   }
 }
 
-@keyframes holly-bubble {
+@keyframes holly-heart {
   0% {
     transform: translate3d(0, 0, 0) scale(0.45);
     opacity: 0;
@@ -781,6 +785,19 @@ a.ranch-btn:hover {
   100% {
     transform: translate3d(0.7rem, -15rem, 0) scale(1.2);
     opacity: 0;
+  }
+}
+
+@keyframes holly-wink {
+  0%,
+  86%,
+  90%,
+  100% {
+    opacity: 0;
+  }
+  87%,
+  89% {
+    opacity: 1;
   }
 }
 
@@ -797,7 +814,8 @@ a.ranch-btn:hover {
   .tumbleweed-spin,
   .sparkle,
   .holly-flip,
-  .holly-bubble {
+  .holly-heart,
+  .holly-wink {
     animation: none;
   }
 }
