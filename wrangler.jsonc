@@ -42,6 +42,16 @@
       "bucket_name": "family-tools-coi",
     },
   ],
+  "ratelimits": [
+    {
+      "name": "LOGIN_LIMITER",
+      "namespace_id": "74636801",
+      "simple": {
+        "limit": 10,
+        "period": 60,
+      },
+    },
+  ],
   "observability": {
     "enabled": true,
     "logs": {

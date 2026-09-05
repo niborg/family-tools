@@ -53,10 +53,11 @@ npm run preview
 No users table. Two secrets:
 
 1. Login compares the form password to `SITE_PASSWORD` (timing-safe).
-2. On success the server sets an httpOnly cookie signed with `AUTH_SECRET`.
-3. The dashboard layout checks that cookie. `/login` is public. After login, `?next=` can send someone back to the page they wanted (only in-app paths).
+2. Failed tries are rate limited per client IP: 5 failures in 15 minutes, plus a Cloudflare burst cap of 10 login posts per minute in production.
+3. On success the server sets an httpOnly cookie signed with `AUTH_SECRET`.
+4. The dashboard layout checks that cookie. `/login` is public. After login, `?next=` can send someone back to the page they wanted (only in-app paths).
 
-Code: [`lib/auth.ts`](lib/auth.ts), [`app/actions/auth.ts`](app/actions/auth.ts). Tests live next to those files.
+Code: [`lib/auth.ts`](lib/auth.ts), [`lib/login-rate-limit.ts`](lib/login-rate-limit.ts), [`app/actions/auth.ts`](app/actions/auth.ts). Tests live next to those files.
 
 ## Deploy to Cloudflare
 
@@ -100,6 +101,7 @@ app/(app)/attendance/   crew hours form
 app/(app)/coi/          COI upload and review
 app/actions/            server actions (login, logout, COI, attendance)
 lib/auth.ts             cookie + password helpers
+lib/login-rate-limit.ts login retry cap per IP
 lib/attendance.ts       week labels, form validation, email copy
 lib/coi/                upload validation, R2 records, Anthropic review
 skills/coi-review/      SKILL.md used as the review prompt

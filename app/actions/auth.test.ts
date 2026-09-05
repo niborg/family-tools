@@ -12,12 +12,20 @@ const redirect = vi.fn((url: string) => {
 
 vi.mock("next/headers", () => ({
   cookies: vi.fn(async () => cookieStore),
+  headers: vi.fn(async () => new Headers({ "cf-connecting-ip": "203.0.113.8" })),
 }));
 
 vi.mock("next/navigation", () => ({
   redirect: (url: string) => redirect(url),
 }));
 
+vi.mock("@opennextjs/cloudflare", () => ({
+  getCloudflareContext: vi.fn(async () => {
+    throw new Error("no worker");
+  }),
+}));
+
+import { LOGIN_MAX_FAILURES, resetLoginRateLimits } from "@/lib/login-rate-limit";
 import { login, logout } from "./auth";
 
 const SECRET = "test-auth-secret";
@@ -35,6 +43,7 @@ describe("login", () => {
   beforeEach(() => {
     cookieStore.set.mockReset();
     redirect.mockClear();
+    resetLoginRateLimits();
     delete process.env.SITE_PASSWORD;
     delete process.env.AUTH_SECRET;
   });
@@ -96,6 +105,44 @@ describe("login", () => {
 
     await expect(login(undefined, data)).rejects.toThrow("NEXT_REDIRECT:/");
     expect(redirect).toHaveBeenCalledWith("/");
+  });
+
+  it("locks out after too many failed passwords", async () => {
+    process.env.SITE_PASSWORD = PASSWORD;
+    process.env.AUTH_SECRET = SECRET;
+
+    for (let i = 0; i < LOGIN_MAX_FAILURES; i += 1) {
+      await expect(login(undefined, form("nope"))).resolves.toEqual({
+        error: "That password didn't work. Try again.",
+      });
+    }
+
+    await expect(login(undefined, form("nope"))).resolves.toEqual({
+      error: "Too many tries. Wait a few minutes.",
+    });
+    await expect(login(undefined, form(PASSWORD))).resolves.toEqual({
+      error: "Too many tries. Wait a few minutes.",
+    });
+    expect(cookieStore.set).not.toHaveBeenCalled();
+  });
+
+  it("clears failures after a correct password", async () => {
+    process.env.SITE_PASSWORD = PASSWORD;
+    process.env.AUTH_SECRET = SECRET;
+
+    for (let i = 0; i < LOGIN_MAX_FAILURES - 1; i += 1) {
+      await login(undefined, form("nope"));
+    }
+
+    await expect(login(undefined, form(PASSWORD))).rejects.toThrow(
+      "NEXT_REDIRECT:/",
+    );
+
+    for (let i = 0; i < LOGIN_MAX_FAILURES; i += 1) {
+      await expect(login(undefined, form("nope"))).resolves.toEqual({
+        error: "That password didn't work. Try again.",
+      });
+    }
   });
 });
 
