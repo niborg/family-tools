@@ -268,13 +268,18 @@ a.ranch-btn:hover {
 }
 
 .ranch-link {
-  color: var(--link);
+  color: #ffe9a8;
   font-weight: 700;
   text-decoration: underline;
+  text-shadow: 1px 1px 0 #12061f;
 }
 
 .ranch-link:visited {
-  color: var(--visited);
+  color: #ffd08a;
+}
+
+.ranch-link:hover {
+  color: #fff8dc;
 }
 
 .ranch-title {
