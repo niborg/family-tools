@@ -10,9 +10,9 @@ export function SuzeBob({ size = "md" }: { size?: "md" | "lg" }) {
       <img
         alt=""
         className={size === "lg" ? "suze-bob suze-bob-lg" : "suze-bob"}
-        height={271}
+        height={348}
         src="/suze-cowboy.png"
-        width={240}
+        width={280}
       />
     </span>
   );

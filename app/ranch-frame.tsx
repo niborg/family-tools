@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { HollyRanch } from "@/app/holly-ranch";
 
 const MARQUEE =
   "★ YEEHAW ★ WELCOME TO THE KNIPE FAMILY RANCH ★ YOU ARE VISITOR № 000137 ★ BEST VIEWED IN NETSCAPE NAVIGATOR 4.0 ★ NOW PLAYING: GHOST RIDERS IN THE SKY.MID ★ NO POP-UPS (YET) ★ PLEASE SIGN THE GUESTBOOK ★";
@@ -51,6 +52,7 @@ export function RanchFrame({ children }: { children: ReactNode }) {
           </p>
         </footer>
       </div>
+      <HollyRanch />
       <div className="tumbleweed" aria-hidden>
         <span className="tumbleweed-hop">
           <img

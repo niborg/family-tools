@@ -416,7 +416,7 @@ a.ranch-btn:hover {
 
 .suze-bob {
   display: block;
-  height: 2.85rem;
+  height: 3.6rem;
   width: auto;
   pointer-events: none;
   user-select: none;
@@ -424,7 +424,7 @@ a.ranch-btn:hover {
 }
 
 .suze-bob-lg {
-  height: 5.75rem;
+  height: 7rem;
 }
 
 .new-burst {
@@ -577,6 +577,104 @@ a.ranch-btn:hover {
   pointer-events: none;
 }
 
+.holly-ranch {
+  position: fixed;
+  right: 0.35rem;
+  bottom: 2.45rem;
+  z-index: 5;
+  width: 6.6rem;
+  pointer-events: none;
+}
+
+.holly-flip {
+  transform-origin: 50% 92%;
+  animation: holly-flip 14s ease-in-out infinite;
+}
+
+.holly-figure {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(2px 3px 0 rgba(18, 6, 31, 0.42));
+}
+
+.holly-bubbles {
+  position: absolute;
+  inset: -1.5rem 0 18% 0;
+  overflow: visible;
+}
+
+.holly-bubble {
+  position: absolute;
+  bottom: 8%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  background:
+    radial-gradient(circle at 32% 28%, #fff 0 14%, transparent 18%),
+    radial-gradient(circle at 70% 72%, #7ec8ff44, #ffffff18 55%, #7ec8ff33);
+  box-shadow: inset -1px -1px 0 #ffffff55;
+  animation: holly-bubble 6s ease-in infinite;
+}
+
+.holly-bubble:nth-child(1) {
+  left: 10%;
+  width: 0.55rem;
+  height: 0.55rem;
+}
+
+.holly-bubble:nth-child(2) {
+  left: 38%;
+  width: 0.85rem;
+  height: 0.85rem;
+  animation-delay: 0.9s;
+  animation-duration: 6.8s;
+}
+
+.holly-bubble:nth-child(3) {
+  left: 62%;
+  width: 0.45rem;
+  height: 0.45rem;
+  animation-delay: 1.7s;
+  animation-duration: 5.4s;
+}
+
+.holly-bubble:nth-child(4) {
+  left: 22%;
+  width: 0.7rem;
+  height: 0.7rem;
+  animation-delay: 2.6s;
+}
+
+.holly-bubble:nth-child(5) {
+  left: 78%;
+  width: 0.95rem;
+  height: 0.95rem;
+  animation-delay: 3.4s;
+  animation-duration: 7.2s;
+}
+
+.holly-bubble:nth-child(6) {
+  left: 48%;
+  width: 0.4rem;
+  height: 0.4rem;
+  animation-delay: 4.1s;
+  animation-duration: 5.8s;
+}
+
+.holly-bubble:nth-child(7) {
+  left: 4%;
+  width: 0.6rem;
+  height: 0.6rem;
+  animation-delay: 5s;
+}
+
+@media (min-width: 40rem) {
+  .holly-ranch {
+    right: 1.1rem;
+    width: 10.25rem;
+  }
+}
+
 @keyframes ranch-scroll {
   from {
     transform: translateX(0);
@@ -657,6 +755,35 @@ a.ranch-btn:hover {
   }
 }
 
+@keyframes holly-flip {
+  0%,
+  36% {
+    transform: scaleX(1);
+  }
+  42%,
+  86% {
+    transform: scaleX(-1);
+  }
+  92%,
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes holly-bubble {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.45);
+    opacity: 0;
+  }
+  14% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(0.7rem, -15rem, 0) scale(1.2);
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ranch-marquee-track,
   .rainbow,
@@ -668,7 +795,9 @@ a.ranch-btn:hover {
   .tumbleweed,
   .tumbleweed-hop,
   .tumbleweed-spin,
-  .sparkle {
+  .sparkle,
+  .holly-flip,
+  .holly-bubble {
     animation: none;
   }
 }
