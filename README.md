@@ -7,8 +7,8 @@ Anyone with the password can get in. That is intentional.
 ## First-time setup
 
 ```bash
-git clone git@github.com:niborg/family-tools.git
-cd family-tools
+git clone git@github.com:niborg/ranch-tools.git
+cd ranch-tools
 npm install
 cp .env.example .env.local
 ```
