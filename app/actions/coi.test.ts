@@ -106,6 +106,19 @@ describe("getCoiReview", () => {
     runCoiReview.mockReset();
   });
 
+  it("refuses to start a review without a session cookie", async () => {
+    isAuthenticated.mockResolvedValue(false);
+
+    await expect(
+      getCoiReview("2c1d6b3a-4f10-4a22-9b80-6d2e1f0a9c11", true),
+    ).resolves.toEqual({
+      ok: false,
+      error: "Please log in again.",
+    });
+    expect(readCoiMeta).not.toHaveBeenCalled();
+    expect(runCoiReview).not.toHaveBeenCalled();
+  });
+
   it("marks unknown ids as missing", async () => {
     isAuthenticated.mockResolvedValue(true);
 

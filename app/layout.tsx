@@ -23,6 +23,11 @@ const vt323 = VT323({
 export const metadata: Metadata = {
   title: "Knipe Ranch Tool Shed",
   description: "Shared tools for the Knipe family homestead",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
