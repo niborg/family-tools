@@ -1,14 +1,21 @@
 import { redirect } from "next/navigation";
 import { isAuthenticated } from "@/lib/auth";
+import { safeInternalPath } from "@/lib/paths";
 import { RanchFrame } from "@/app/ranch-frame";
 import { SuzeBob } from "@/app/suze-bob";
 import { LoginForm } from "./login-form";
 
 export const dynamic = "force-dynamic";
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
+  const next = safeInternalPath((await searchParams).next);
+
   if (await isAuthenticated()) {
-    redirect("/");
+    redirect(next);
   }
 
   return (
@@ -27,7 +34,7 @@ export default async function LoginPage() {
         <p className="mt-3 mb-6 text-center font-comic font-bold text-[#5c3317]">
           The tool shed is locked. Enter the family password, partner.
         </p>
-        <LoginForm />
+        <LoginForm next={next === "/" ? undefined : next} />
         <p className="mt-5 text-center font-pixel text-sm text-[#3d1f0a]">
           <span className="blink">★</span> members only · no rustlers{" "}
           <span className="blink">★</span>

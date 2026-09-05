@@ -7,6 +7,7 @@ import {
   setSessionCookie,
   sitePasswordConfigured,
 } from "@/lib/auth";
+import { safeInternalPath } from "@/lib/paths";
 
 export type LoginState = {
   error: string;
@@ -26,7 +27,7 @@ export async function login(
   }
 
   await setSessionCookie();
-  redirect("/");
+  redirect(safeInternalPath(formData.get("next")));
 }
 
 export async function logout(): Promise<void> {

@@ -3,11 +3,12 @@
 import { useActionState } from "react";
 import { login } from "@/app/actions/auth";
 
-export function LoginForm() {
+export function LoginForm({ next }: { next?: string }) {
   const [state, formAction, pending] = useActionState(login, undefined);
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
+      {next ? <input name="next" type="hidden" value={next} /> : null}
       <label className="flex flex-col gap-2 font-comic text-sm font-bold">
         Secret handshake (password)
         <input

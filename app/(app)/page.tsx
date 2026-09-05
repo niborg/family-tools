@@ -2,6 +2,12 @@ import Link from "next/link";
 
 const tools = [
   {
+    href: "/attendance",
+    title: "Crew hours",
+    description: "How many days Santos and Blanca worked this week.",
+    icon: "🐴",
+  },
+  {
     href: "/coi",
     title: "Upload COI",
     description: "Send a certificate of insurance for review, partner.",

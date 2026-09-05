@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { logout } from "@/app/actions/auth";
 import { isAuthenticated } from "@/lib/auth";
+import { safeInternalPath } from "@/lib/paths";
 import { RanchFrame } from "@/app/ranch-frame";
 import { SuzeBob } from "@/app/suze-bob";
 
@@ -15,7 +17,13 @@ export default async function AppLayout({
   children: ReactNode;
 }) {
   if (!(await isAuthenticated())) {
-    redirect("/login");
+    const headerList = await headers();
+    const path = headerList.get("x-ranch-pathname") ?? "/";
+    const search = headerList.get("x-ranch-search") ?? "";
+    const next = safeInternalPath(`${path}${search}`);
+    redirect(
+      next === "/" ? "/login" : `/login?next=${encodeURIComponent(next)}`,
+    );
   }
 
   return (

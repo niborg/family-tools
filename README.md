@@ -33,7 +33,7 @@ Open [http://localhost:3000](http://localhost:3000). Log in, then you should see
 | Command | What it does |
 | --- | --- |
 | `npm run dev` | Next.js local server (uses `.env.local`) |
-| `npm test` | Vitest — auth, COI validation, review helpers |
+| `npm test` | Vitest — auth, COI, crew hours, review helpers |
 | `npm run build` | Production Next.js build (used by deploy) |
 | `npm run preview` | Build + run the Worker locally (needs `.dev.vars`) |
 | `npm run deploy` | Build with OpenNext and upload to Cloudflare |
@@ -54,13 +54,25 @@ No users table. Two secrets:
 
 1. Login compares the form password to `SITE_PASSWORD` (timing-safe).
 2. On success the server sets an httpOnly cookie signed with `AUTH_SECRET`.
-3. The dashboard layout checks that cookie. `/login` is public.
+3. The dashboard layout checks that cookie. `/login` is public. After login, `?next=` can send someone back to the page they wanted (only in-app paths).
 
 Code: [`lib/auth.ts`](lib/auth.ts), [`app/actions/auth.ts`](app/actions/auth.ts). Tests live next to those files.
 
 ## Deploy to Cloudflare
 
-The live app is the Worker named `ranch`, hostname **ranch.knipe.io**. Config is [`wrangler.jsonc`](wrangler.jsonc). DNS for `knipe.io` stays on Cloudflare; deploy creates the `ranch` custom domain record. Mail on `knipe.io` is not touched (MX/SPF/DKIM stay on the apex).
+The live app is the Worker named `ranch`, hostname **ranch.knipe.io**. Config is [`wrangler.jsonc`](wrangler.jsonc). DNS for `knipe.io` stays on Cloudflare; deploy creates the `ranch` custom domain record. Apex mail on `knipe.io` is not touched (MX/SPF/DKIM stay on the root). Crew-hour mail uses Email Sending on the `ranch` subdomain only.
+
+## Crew hours
+
+Wednesday at 12pm Pacific, the Worker emails `susie.knipe@gmail.com` from `admin@ranch.knipe.io` with a link to [`/attendance`](https://ranch.knipe.io/attendance). After she logs in and submits, the same sender emails `suzeadmin@gmail.com` the days Santos and Blanca worked.
+
+Cloudflare cron is UTC and does not follow DST, so the Worker fires at **19:00 and 20:00 UTC** on Wednesdays and only sends when it is actually noon in `America/Los_Angeles`.
+
+Email will not send until Email Sending is onboarded for **ranch.knipe.io** (not Email Routing — Routing would move apex MX). In the Cloudflare dashboard: **Compute → Email Service → Email Sending → Onboard Domain → ranch.knipe.io**. That adds bounce/SPF/DKIM records under `cf-bounce.ranch.knipe.io` and DMARC under `_dmarc.ranch.knipe.io`.
+
+Add `susie.knipe@gmail.com` and `suzeadmin@gmail.com` as destination addresses and click the confirmation links. Sending to those verified addresses stays on the Workers Free plan.
+
+`npm run dev` can show the form, but the report email needs the Worker `EMAIL` binding (`npm run preview` or production).
 
 ```bash
 npx wrangler login          # once, account that owns knipe.io
@@ -82,15 +94,19 @@ If deploy complains that `ranch.knipe.io` already has a DNS record, delete that 
 ## Layout
 
 ```
-app/login/          public password page
-app/(app)/          gated dashboard (add tools here)
-app/(app)/coi/      COI upload and review
-app/actions/        server actions (login, logout, COI)
-lib/auth.ts         cookie + password helpers
-lib/coi/            upload validation, R2 records, Anthropic review
-skills/coi-review/  SKILL.md used as the review prompt
-wrangler.jsonc      Worker name, domain, R2 binding
-open-next.config.ts OpenNext Cloudflare adapter
+app/login/              public password page
+app/(app)/              gated dashboard (add tools here)
+app/(app)/attendance/   crew hours form
+app/(app)/coi/          COI upload and review
+app/actions/            server actions (login, logout, COI, attendance)
+lib/auth.ts             cookie + password helpers
+lib/attendance.ts       week labels, form validation, email copy
+lib/coi/                upload validation, R2 records, Anthropic review
+skills/coi-review/      SKILL.md used as the review prompt
+proxy.ts                copies the request path so login can send people back
+worker.ts               OpenNext fetch handler + Wednesday cron
+wrangler.jsonc          Worker name, domain, cron, email, R2
+open-next.config.ts     OpenNext Cloudflare adapter
 ```
 
 New tools go under `app/(app)/` so they stay behind the password.
@@ -99,4 +115,4 @@ Review instructions live in [`skills/coi-review/SKILL.md`](skills/coi-review/SKI
 
 ## Cost
 
-Workers and R2 stay in the free tier at family volume. Anthropic is billed per review. Idle is $0.
+Workers, R2, and mail to the two verified Gmail addresses stay in the free tier at family volume. Anthropic is billed per review. Idle is $0.

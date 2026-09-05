@@ -75,6 +75,28 @@ describe("login", () => {
     expect(cookieStore.set).toHaveBeenCalledOnce();
     expect(redirect).toHaveBeenCalledWith("/");
   });
+
+  it("returns to a safe in-app path after login", async () => {
+    process.env.SITE_PASSWORD = PASSWORD;
+    process.env.AUTH_SECRET = SECRET;
+    const data = form(PASSWORD);
+    data.set("next", "/attendance?week=2026-08-31");
+
+    await expect(login(undefined, data)).rejects.toThrow(
+      "NEXT_REDIRECT:/attendance?week=2026-08-31",
+    );
+    expect(redirect).toHaveBeenCalledWith("/attendance?week=2026-08-31");
+  });
+
+  it("ignores an external next URL", async () => {
+    process.env.SITE_PASSWORD = PASSWORD;
+    process.env.AUTH_SECRET = SECRET;
+    const data = form(PASSWORD);
+    data.set("next", "https://evil.example");
+
+    await expect(login(undefined, data)).rejects.toThrow("NEXT_REDIRECT:/");
+    expect(redirect).toHaveBeenCalledWith("/");
+  });
 });
 
 describe("logout", () => {
