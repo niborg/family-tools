@@ -3,7 +3,7 @@ import {
   attendanceFormUrl,
   attendanceWeek,
   buildReminderEmail,
-  isPacificNoonWednesday,
+  isPacificFourPmWednesday,
 } from "./attendance";
 import { asEmailSender, sendRanchEmail } from "./email";
 
@@ -11,8 +11,8 @@ export async function sendWeeklyAttendanceReminder(env: {
   EMAIL?: unknown;
   ATTENDANCE_SITE_URL?: string;
 }): Promise<{ sent: boolean; reason?: string }> {
-  if (!isPacificNoonWednesday()) {
-    return { sent: false, reason: "not-noon" };
+  if (!isPacificFourPmWednesday()) {
+    return { sent: false, reason: "not-four-pm" };
   }
 
   const sender = asEmailSender(env.EMAIL);

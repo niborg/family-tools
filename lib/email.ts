@@ -1,11 +1,18 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
+export type RanchEmailAttachment = {
+  content: string;
+  filename: string;
+  type: string;
+};
+
 export type RanchEmail = {
   to: string;
   from: string;
   subject: string;
   text: string;
   html?: string;
+  attachments?: RanchEmailAttachment[];
 };
 
 export type EmailSender = {

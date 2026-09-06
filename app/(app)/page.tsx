@@ -4,7 +4,8 @@ const tools = [
   {
     href: "/attendance",
     title: "Crew hours",
-    description: "How many days Santos and Blanca worked this week.",
+    description:
+      "Days Santos and Blanca worked, plus a photo of Santos's hours sheet.",
     icon: "🐴",
   },
   {

@@ -24,7 +24,10 @@
     "ATTENDANCE_SITE_URL": "https://ranch.knipe.io",
   },
   "triggers": {
-    "crons": ["0 19 * * 3", "0 20 * * 3"],
+    "crons": ["0 23 * * 3", "0 0 * * 4"],
+  },
+  "images": {
+    "binding": "IMAGES",
   },
   "send_email": [
     {
@@ -40,6 +43,10 @@
     {
       "binding": "COI_BUCKET",
       "bucket_name": "family-tools-coi",
+    },
+    {
+      "binding": "HOURS_BUCKET",
+      "bucket_name": "family-tools-hours",
     },
   ],
   "ratelimits": [

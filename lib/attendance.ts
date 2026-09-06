@@ -30,6 +30,7 @@ export type AttendanceReport = {
   santosDays: number;
   blancaDays: number;
   comment: string;
+  sheetUrl?: string;
 };
 
 export type AttendanceFields = {
@@ -94,9 +95,9 @@ function pacificParts(now: Date): CalendarDate {
   };
 }
 
-export function isPacificNoonWednesday(now: Date = new Date()): boolean {
+export function isPacificFourPmWednesday(now: Date = new Date()): boolean {
   const parts = pacificParts(now);
-  return parts.weekday === "Wed" && parts.hour === 12;
+  return parts.weekday === "Wed" && parts.hour === 16;
 }
 
 export function parseWeekStart(value: unknown): string | undefined {
@@ -156,6 +157,59 @@ export function attendanceWeek(weekStart?: string, now: Date = new Date()): Atte
     end,
     label: `${startLabel} – ${endLabel}`,
   };
+}
+
+const MS_PER_DAY = 86_400_000;
+const WEEK_ID = /^(\d{4})-(\d{2})$/;
+
+function mondayUtc(year: number, month: number, day: number): number {
+  return Date.UTC(year, month - 1, day);
+}
+
+function isoWeek1Monday(isoYear: number): number {
+  const jan4 = Date.UTC(isoYear, 0, 4);
+  const jan4Weekday = (new Date(jan4).getUTCDay() + 6) % 7;
+  return jan4 - jan4Weekday * MS_PER_DAY;
+}
+
+export function attendanceWeekId(weekStart: string): string {
+  const [year, month, day] = weekStart.split("-").map(Number) as [
+    number,
+    number,
+    number,
+  ];
+  const monday = mondayUtc(year, month, day);
+  const isoYear = new Date(monday + 3 * MS_PER_DAY).getUTCFullYear();
+  const week = 1 + Math.round((monday - isoWeek1Monday(isoYear)) / (7 * MS_PER_DAY));
+  return `${isoYear}-${pad2(week)}`;
+}
+
+export function attendanceWeekStartFromId(weekId: string): string | undefined {
+  const match = WEEK_ID.exec(weekId);
+  if (!match) {
+    return undefined;
+  }
+
+  const isoYear = Number(match[1]);
+  const week = Number(match[2]);
+  if (week < 1 || week > 53) {
+    return undefined;
+  }
+
+  const monday = new Date(isoWeek1Monday(isoYear) + (week - 1) * 7 * MS_PER_DAY);
+  const start = formatYmd(
+    monday.getUTCFullYear(),
+    monday.getUTCMonth() + 1,
+    monday.getUTCDate(),
+  );
+  if (attendanceWeekId(start) !== weekId) {
+    return undefined;
+  }
+  return start;
+}
+
+export function isAttendanceWeekId(value: string): boolean {
+  return attendanceWeekStartFromId(value) !== undefined;
 }
 
 export function attendanceFormPath(weekStart: string): string {
@@ -222,10 +276,10 @@ export function buildReminderEmail(week: AttendanceWeek, formUrl: string): {
     "",
     `Quick check-in for the ranch crew this week (${week.label}).`,
     "",
-    "Please log in and tell me how many days Santos and Blanca worked:",
+    "Please log in, enter the days, and add a photo of Santos's hours sheet:",
     formUrl,
     "",
-    "Use the family password. There's a comment box if anything is worth mentioning.",
+    "Use the family password. Add a photo of Santos's hours sheet, and a comment if anything is worth mentioning.",
     "",
     "Love you,",
     "the tool shed",
@@ -235,7 +289,7 @@ export function buildReminderEmail(week: AttendanceWeek, formUrl: string): {
     "<p>Hi Mom,</p>",
     `<p>Quick check-in for the ranch crew this week (${escapeHtml(week.label)}).</p>`,
     `<p><a href="${escapeHtml(formUrl)}">Open this week's crew hours form</a></p>`,
-    "<p>Use the family password. There's a comment box if anything is worth mentioning.</p>",
+    "<p>Use the family password. Add a photo of Santos's hours sheet, and a comment if anything is worth mentioning.</p>",
     "<p>Love you,<br>the tool shed</p>",
   ].join("");
 
@@ -262,6 +316,7 @@ export function buildReportEmail(report: AttendanceReport): {
     `Santos: ${report.santosDays} day${report.santosDays === 1 ? "" : "s"}`,
     `Blanca: ${report.blancaDays} day${report.blancaDays === 1 ? "" : "s"}`,
     `Comment: ${note}`,
+    report.sheetUrl ? `Hours sheet: ${report.sheetUrl}` : "Hours sheet: attached",
   ].join("\n");
 
   const html = [
@@ -269,6 +324,9 @@ export function buildReportEmail(report: AttendanceReport): {
     `<p><strong>Santos:</strong> ${report.santosDays} day${report.santosDays === 1 ? "" : "s"}</p>`,
     `<p><strong>Blanca:</strong> ${report.blancaDays} day${report.blancaDays === 1 ? "" : "s"}</p>`,
     `<p><strong>Comment:</strong> ${escapeHtml(note)}</p>`,
+    report.sheetUrl
+      ? `<p><strong>Hours sheet:</strong> <a href="${escapeHtml(report.sheetUrl)}">Open in the tool shed</a> (also attached)</p>`
+      : "<p><strong>Hours sheet:</strong> attached</p>",
   ].join("");
 
   return {

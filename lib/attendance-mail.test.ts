@@ -6,20 +6,20 @@ describe("sendWeeklyAttendanceReminder", () => {
     vi.useRealTimers();
   });
 
-  it("does nothing when it is not noon Pacific on Wednesday", async () => {
+  it("does nothing when it is not 4pm Pacific on Wednesday", async () => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-09-09T20:00:00.000Z"));
+    vi.setSystemTime(new Date("2026-09-09T19:00:00.000Z"));
     const send = vi.fn();
 
     await expect(
       sendWeeklyAttendanceReminder({ EMAIL: { send } }),
-    ).resolves.toEqual({ sent: false, reason: "not-noon" });
+    ).resolves.toEqual({ sent: false, reason: "not-four-pm" });
     expect(send).not.toHaveBeenCalled();
   });
 
-  it("sends the reminder at noon Pacific on Wednesday", async () => {
+  it("sends the reminder at 4pm Pacific on Wednesday", async () => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-09-09T19:00:00.000Z"));
+    vi.setSystemTime(new Date("2026-09-09T23:00:00.000Z"));
     const send = vi.fn().mockResolvedValue({});
 
     await expect(
